@@ -27,12 +27,12 @@ def main():
         try:
             response = requests.get(url, headers=headers, params=params)
             response.raise_for_status()
-            response_data = response.json()
-            if response_data['status'] == 'timeout':
-                params = {'timestamp': response_data['timestamp_to_request']}
+            review_information = response.json()
+            if review_information['status'] == 'timeout':
+                params = {'timestamp': review_information['timestamp_to_request']}
             else:
-                params = {'timestamp': response_data['last_attempt_timestamp']}
-                attempt = response_data['new_attempts'][0]
+                params = {'timestamp': review_information['last_attempt_timestamp']}
+                attempt = review_information['new_attempts'][0]
                 if attempt['is_negative']:
                     decision = 'К сожалению, в работе нашлись ошибки =('
                 else:
