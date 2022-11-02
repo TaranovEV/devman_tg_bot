@@ -51,7 +51,9 @@ def main():
                         '''
 
                 bot.send_message(text=dedent(text), chat_id=args.chat_id)
-        except (ReadTimeout, ConnectionError):
+        except ReadTimeout:
+            continue
+        except ConnectionError:
             sleep(60)
             continue
 
