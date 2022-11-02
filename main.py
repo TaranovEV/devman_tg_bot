@@ -28,22 +28,27 @@ def main():
             response = requests.get(url, headers=headers, params=params)
             response.raise_for_status()
             review_information = response.json()
+
             if review_information['status'] == 'timeout':
-                params = {'timestamp': review_information['timestamp_to_request']}
+                params = {
+                    'timestamp': review_information['timestamp_to_request']
+                }
             else:
-                params = {'timestamp': review_information['last_attempt_timestamp']}
+                params = {
+                    'timestamp': review_information['last_attempt_timestamp']
+                }
                 attempt = review_information['new_attempts'][0]
+
                 if attempt['is_negative']:
                     decision = 'К сожалению, в работе нашлись ошибки =('
                 else:
                     decision = 'Замечаний нет =)'
-                text = (
-                        f'''
+
+                text = f'''
                         Урок "{attempt['lesson_title']}" проверен
                         {decision}
                         Подробнее: {attempt['lesson_url']}
                         '''
-                )
 
                 bot.send_message(text=dedent(text), chat_id=args.chat_id)
         except (ReadTimeout, ConnectionError):
